@@ -8,26 +8,30 @@
   *
   */
 
-void stop();
-void _delay(float seconds);
-void _loop() ;
-int speedp =20;  //speed in percent power
-int potVal;
-int angle =0;
-Servo Servo1;
+//define functions
+void calibrate_sensors();
+void drive_motors(int left, int right);
+
+//define constants and global variables
+const uint8_t SensorCount = 1;  //6
+uint16_t sensorValues[SensorCount]; //single IR sensor on I/O A6
+const int tracking value = 50;//for one sensor, ideally track to 50% of a range of 0-100
+
+
+//define objects
+MeMegaPiDCMotor motor_1(1);//right side?. refactor both with clear names
+MeMegaPiDCMotor motor_2(2);//left side?
 QTRSensors qtr;
 
-const uint8_t SensorCount = 1;  //6
-uint16_t sensorValues[SensorCount];
 
-MeMegaPiDCMotor motor_1(1);
-MeMegaPiDCMotor motor_9(9);
-MeMegaPiDCMotor motor_2(2);
-MeMegaPiDCMotor motor_10(10);
-
-
+/**
+ * This is the main setup function and is run once on startup
+ * 
+ */
 void setup(){
     Serial.begin(9600);
+    delay(2000);
+    Serial.print('serial communication started')
     // configure the sensors
     //qtr.setTypeAnalog();
     //qtr.setSensorPins((const uint8_t[]){A6, A7, A8, A9, A10, A11}, SensorCount);  //A0, A1, A2, A3, A4, A5
@@ -35,17 +39,29 @@ void setup(){
 
     pinMode(LED_BUILTIN, OUTPUT);
     //calibrate_sensors()
+    //perform any other motor or sensor initialization
 
     //
-    TCCR1A = _BV(WGM10);
-    TCCR1B = _BV(CS11) | _BV(WGM12);
-    TCCR2A = _BV(WGM21) | _BV(WGM20);
-    TCCR2B = _BV(CS21);
-    // DO SOMETHING
+    // TCCR1A = _BV(WGM10);
+    // TCCR1B = _BV(CS11) | _BV(WGM12);
+    // TCCR2A = _BV(WGM21) | _BV(WGM20);
+    // TCCR2B = _BV(CS21);
+  
+}
 
-    delay(2000);
-    //Serial.begin(9600);
-
+/**
+ * This is the main loop function and is run until terminated after the startup function has begun
+ * 
+ */
+void loop(){
+    while(true){//until terminated
+        //sensor_values = get_line_sensor_values();
+        //if(approaching_river(sensor_values))
+        //    then cross river or initiate dump procedure and continue to next iteration of loop
+        //motor_power = calculate_motor_power(sensor_values)
+        //drive_motors(motor_power)
+        //check for presence of popsicle stick and perform appropriate action
+    }
 }
 
 //performs calibration of QTR sensors
@@ -81,9 +97,8 @@ void calibrate_sensors(){
     }
 }
 
-void _loop(){
-}
 
-void loop(){
-
+void drive_motors(int left, int right){
+    motor_left.run(left)
+    motor_right.run(right)
 }
