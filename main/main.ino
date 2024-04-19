@@ -10,11 +10,13 @@
 //define functions
 void calibrate_sensors();
 void drive_motors(int left, int right);
-int get_line_sensor_values();
+void get_line_sensor_values();
 
 //define constants and global variables
-const uint8_t SensorCount = 1;  //6
-int PIN_SENSOR = A6;//check what pin the IR sensor is on
+const uint8_t SensorCount = 8;  //6
+uint16_t sensorValues[SensorCount];
+
+int EMITTOR_PIN = A6;//check what pin the IR sensor is on
 int tracking_value = 50;//for one sensor, ideally track to 50% of a range of 0-100
 
 
@@ -30,12 +32,12 @@ QTRSensors qtr;
 //
 void setup(){
     Serial.begin(9600);
-    delay(2000);
+    delay(1000);
     Serial.println("serial communication started");
     // configure the sensors
-    //qtr.setTypeAnalog();
-    //qtr.setSensorPins((const uint8_t[]){A6, A7, A8, A9, A10, A11}, SensorCount);  //A0, A1, A2, A3, A4, A5
-    //qtr.setEmitterPin(66);  //2
+    qtr.setTypeAnalog();
+    qtr.setSensorPins((const uint8_t[]){A7, A8, A9, A10, A11, A12, A13, A14}, SensorCount);  //A0, A1, A2, A3, A4, A5
+    qtr.setEmitterPin(EMITTOR_PIN);  //2
 
     pinMode(LED_BUILTIN, OUTPUT);
     
@@ -109,8 +111,17 @@ void drive_motors(int left, int right){
 }
 
 //get sensor values. will need to return an array later
-int get_line_sensor_values(){
-    int reading = digitalRead(PIN_SENSOR);
-    Serial.println(reading);
-    return reading;
+void get_line_sensor_values(){
+    qtr.read(sensorValues);
+    for (uint8_t i = 0; i<SensorCount; i++){
+      Serial.print(sensorValues[i]);
+      Serial.print('\t');
+
+    }
+    
+    Serial.println();
+
+    delay(1000);
+
+    //return reading;
 }
